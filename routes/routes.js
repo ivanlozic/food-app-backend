@@ -1,10 +1,17 @@
-const express = require('express');
-const menuController = require('../controllers/menuController');
-const orderController = require('../controllers/orderController');
+const express = require('express')
+const menuController = require('../controllers/menuController')
+const orderController = require('../controllers/orderController')
+const userController = require('../controllers/userController')
 
-const router = express.Router();
+const router = express.Router()
 
-router.get('/api/menu', menuController.getMenu);
-router.post('/api/orders', orderController.createOrder);
+router.get('/api/menu', menuController.getMenu)
+router.post('/api/orders', orderController.createOrder)
 
-module.exports = router;
+router.get('/users', userController.getAllUsers)
+router.post('/users', userController.createUser)
+router.get('/users/:id', userController.getUser)
+router.put('/users/:id', userController.updateUser)
+router.delete('/users/:id', userController.deleteUser)
+
+module.exports = router

@@ -1,20 +1,23 @@
-const express = require('express');
-const app = express();
-const port = 5000;
+const express = require('express')
+const cors = require('cors')
+const app = express()
+const port = 5000
 
-const routes = require('./routes/routes');
+const routes = require('./routes/routes')
 
-app.use(express.json());
+app.use(express.json())
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  next()
+})
 
-app.use('/', routes);
+app.use(cors())
+
+app.use('/', routes)
 
 app.listen(port, () => {
-  console.log('Server is listening');
-});
+  console.log('Server is listening')
+})

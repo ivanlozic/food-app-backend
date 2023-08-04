@@ -1,4 +1,4 @@
-const { readJsonFile, writeJsonFile } = require('../utils/fileUtils');
+const { readJsonFile, writeJsonFile } = require('../utills/fileUtils');
 
 const createOrder = async (req, res) => {
   try {

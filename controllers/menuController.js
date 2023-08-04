@@ -1,4 +1,4 @@
-const { readJsonFile } = require('../utils/fileUtils');
+const { readJsonFile } = require('../utills/fileUtils');
 
 const getMenu = async (req, res) => {
   try {
