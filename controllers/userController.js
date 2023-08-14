@@ -1,6 +1,10 @@
-const User = require('../user')
+const User = require('../models/userModel')
 const path = require('path')
 const fs = require('fs')
+const { v4: uuidv4 } = require('uuid')
+const jwt = require('jsonwebtoken')
+
+const secretKey = 'your-secret-key'
 
 function readUsersFromFile() {
   const filePath = path.join(__dirname, '../data/users.json')
@@ -46,6 +50,7 @@ exports.createUser = (req, res) => {
     }
 
     const newUser = {
+      id: uuidv4(),
       name,
       surname,
       email,
@@ -79,3 +84,21 @@ exports.deleteUser = (req, res) => {
     message: 'This route is not yet defined!'
   })
 }
+
+exports.loginUser = (req, res) => {
+  const { email, password } = req.body;
+  const users = readUsersFromFile();
+  const user = users.find((u) => u.email === email);
+
+  if (!user) {
+    return res.status(401).json({ message: 'Email not found' });
+  }
+
+  if (user.password !== password) {
+    return res.status(401).json({ message: 'Invalid password' });
+  }
+
+  const token = jwt.sign({ userId: user.id }, secretKey, { expiresIn: '1h' });
+
+  res.json({ token });
+};

@@ -8,6 +8,8 @@ const router = express.Router()
 router.get('/api/menu', menuController.getMenu)
 router.post('/api/orders', orderController.createOrder)
 
+router.post('/api/login', userController.loginUser)
+
 router.get('/users', userController.getAllUsers)
 router.post('/users', userController.createUser)
 router.get('/users/:id', userController.getUser)
