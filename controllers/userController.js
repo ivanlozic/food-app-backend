@@ -29,13 +29,30 @@ exports.getAllUsers = async (req, res) => {
     res.status(500).json({ message: err.message })
   }
 }
-exports.getUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined!'
-  })
-}
+exports.getUser = async (req, res) => {
+  try {
+    const userId = req.params.id
+    const users = readUsersFromFile()
+    const user = await users.find((u) => u.id === userId)
 
+    if (!user) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'User not found'
+      })
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: user
+    })
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal server error'
+    })
+  }
+}
 exports.createUser = (req, res) => {
   const { name, surname, email, password, phone } = req.body
 
@@ -86,19 +103,19 @@ exports.deleteUser = (req, res) => {
 }
 
 exports.loginUser = (req, res) => {
-  const { email, password } = req.body;
-  const users = readUsersFromFile();
-  const user = users.find((u) => u.email === email);
+  const { email, password } = req.body
+  const users = readUsersFromFile()
+  const user = users.find((u) => u.email === email)
 
   if (!user) {
-    return res.status(401).json({ message: 'Email not found' });
+    return res.status(401).json({ message: 'Email not found' })
   }
 
   if (user.password !== password) {
-    return res.status(401).json({ message: 'Invalid password' });
+    return res.status(401).json({ message: 'Invalid password' })
   }
 
-  const token = jwt.sign({ userId: user.id }, secretKey, { expiresIn: '1h' });
+  const token = jwt.sign({ userId: user.id }, secretKey, { expiresIn: '1h' })
 
-  res.json({ token });
-};
+  res.json({ token, id: user.id })
+}

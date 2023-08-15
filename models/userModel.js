@@ -13,11 +13,22 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    lowercase: true,
+    lowercase: true
   },
   password: {
     type: String,
-    required: true
+    required: true,
+    minlength: 8
+  },
+  passwordConfirm: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (el) {
+        return el === this.password
+      },
+      message: 'Passwords are not the same!'
+    }
   },
   phone: {
     type: Number,
