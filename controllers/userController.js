@@ -88,12 +88,49 @@ exports.createUser = (req, res) => {
     res.status(500).json({ message: err.message })
   }
 }
-
 exports.updateUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined!'
-  })
+  const { email, password, newPassword, confirmPassword, ...updateData } =
+    req.body
+
+  try {
+    const users = readUsersFromFile()
+
+    const existingUserIndex = users.findIndex((user) => user.email === email)
+
+    if (existingUserIndex === -1) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'User not found'
+      })
+    }
+    const existingUser = users[existingUserIndex]
+
+    Object.assign(existingUser, updateData)
+
+    if (newPassword && newPassword !== confirmPassword) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'New passwords do not match'
+      })
+    }
+
+    if (newPassword) {
+      existingUser.password = newPassword
+    }
+
+    writeUsersToFile(users)
+
+    res.status(200).json({
+      status: 'success',
+      data: existingUser
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({
+      status: 'error',
+      message: 'An error occurred while updating the user'
+    })
+  }
 }
 exports.deleteUser = (req, res) => {
   res.status(500).json({
