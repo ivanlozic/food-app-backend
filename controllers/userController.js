@@ -133,10 +133,44 @@ exports.updateUser = (req, res) => {
   }
 }
 exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined!'
-  })
+  const { email, password } =
+    req.body
+
+  try {
+    const users = readUsersFromFile()
+
+    const userIndex = users.findIndex((user) => user.email === email)
+
+
+    if (userIndex === -1) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'User not found'
+      })
+    }
+
+    const user = users[userIndex];
+
+    if (user.password !== password) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'Invalid password'
+      });
+    }
+    users.splice(userIndex, 1)
+    writeUsersToFile(users)
+
+    res.status(200).json({
+      status: 'success',
+      message: 'User deleted successfully'
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({
+      status: 'error',
+      message: 'An error occurred while deleting the user'
+    })
+  }
 }
 
 exports.loginUser = (req, res) => {
