@@ -7,13 +7,13 @@ const jwt = require('jsonwebtoken')
 const secretKey = 'your-secret-key'
 
 function readUsersFromFile() {
-  const filePath = path.join(__dirname, '../data/users.json')
+  const filePath = path.join(__dirname, '../db/users.json')
   const fileContents = fs.readFileSync(filePath, 'utf-8')
   return JSON.parse(fileContents)
 }
 
 function writeUsersToFile(users) {
-  const filePath = path.join(__dirname, '../data/users.json')
+  const filePath = path.join(__dirname, '../db/users.json')
   try {
     fs.writeFileSync(filePath, JSON.stringify(users, null, 2), 'utf-8')
     console.log('User data successfully written to file.')

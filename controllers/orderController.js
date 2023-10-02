@@ -2,7 +2,7 @@ const { readJsonFile, writeJsonFile } = require('../utills/fileUtils');
 
 const createOrder = async (req, res) => {
   try {
-    const dataPath = `${__dirname}/data`;
+    const dataPath = `${__dirname}/db`;
     const ordersFilePath = `${dataPath}/orders.json`;
 
     const orders = await readJsonFile(ordersFilePath);

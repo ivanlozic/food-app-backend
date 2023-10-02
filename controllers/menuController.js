@@ -2,7 +2,7 @@ const { readJsonFile } = require('../utills/fileUtils');
 
 const getMenu = async (req, res) => {
   try {
-    const dataPath = `${__dirname}/data`;
+    const dataPath = `${__dirname}/db`;
     const menuFilePath = `${dataPath}/menu.json`;
     const menu = await readJsonFile(menuFilePath);
     res.status(200).json(menu);
