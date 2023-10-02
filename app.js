@@ -16,7 +16,7 @@ app.use((req, res, next) => {
 
 app.use(cors())
 
-app.use('/', routes)
+app.use(express.static(__dirname + '/',routes));
 
 app.listen(port, () => {
   console.log('Server is listening')
