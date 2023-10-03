@@ -6,6 +6,7 @@ const userController = require('../controllers/userController')
 const router = express.Router()
 
 router.get('/api/menu', menuController.getMenu)
+router.get('/api/orders', orderController.getOrders)
 router.post('/api/orders', orderController.createOrder)
 
 router.post('/api/login', userController.loginUser)
