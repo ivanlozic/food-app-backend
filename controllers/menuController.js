@@ -1,20 +1,29 @@
-const { readJsonFile } = require('../utills/fileUtils')
+const path = require('path')
+const fs = require('fs').promises
 
-const getMenu = async (req, res) => {
+const menuFilePath = path.join(__dirname, '../db/menu.json')
+
+async function readJsonFile(filePath) {
   try {
-    const dataPath = `${__dirname}/db`
-    const menuFilePath = `${dataPath}/menu.json`
-    const menu = await readJsonFile(menuFilePath)
-    res.status(200).json(menu)
+    const fileContents = await fs.readFile(filePath, 'utf-8')
+    return JSON.parse(fileContents)
   } catch (error) {
-    console.error('Error fetching menu:', error),
-      res.status(500).json({
-        status: 'error',
-        message: 'Failed to fetch the menu.'
-      })
+    throw error
   }
 }
 
+const getMenu = async (req, res) => {
+  try {
+    const menu = await readJsonFile(menuFilePath)
+    res.status(200).json(menu)
+  } catch (error) {
+    console.error('Error fetching menu:', error)
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to fetch the menu.'
+    })
+  }
+}
 
 module.exports = {
   getMenu
