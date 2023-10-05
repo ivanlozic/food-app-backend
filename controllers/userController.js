@@ -1,26 +1,9 @@
 const User = require('../models/userModel')
-const path = require('path')
 const fs = require('fs')
-const { v4: uuidv4 } = require('uuid')
-const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt');
+const { v4: uuidv4, v4 } = require('uuid')
 
-const secretKey = 'your-secret-key'
 
-function readUsersFromFile() {
-  const filePath = path.join(__dirname, '../db/users.json')
-  const fileContents = fs.readFileSync(filePath, 'utf-8')
-  return JSON.parse(fileContents)
-}
-
-function writeUsersToFile(users) {
-  const filePath = path.join(__dirname, '../db/users.json')
-  try {
-    fs.writeFileSync(filePath, JSON.stringify(users, null, 2), 'utf-8')
-    console.log('User data successfully written to file.')
-  } catch (err) {
-    console.error('Error writing user data to file:', err)
-  }
-}
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find()
@@ -68,6 +51,7 @@ exports.createUser = async (req, res) => {
     }
 
     const newUser = new User({
+      id: uuidv4,
       name,
       surname,
       email,
