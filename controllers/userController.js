@@ -23,17 +23,17 @@ function writeUsersToFile(users) {
 }
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = readUsersFromFile()
+    const users = await User.find()
     res.json(users)
   } catch (err) {
     res.status(500).json({ message: err.message })
   }
 }
 exports.getUser = async (req, res) => {
+  const userId = req.params.id
+
   try {
-    const userId = req.params.id
-    const users = readUsersFromFile()
-    const user = await users.find((u) => u.id === userId)
+    const user = await User.findById(userId)
 
     if (!user) {
       return res.status(404).json({
@@ -47,82 +47,77 @@ exports.getUser = async (req, res) => {
       data: user
     })
   } catch (error) {
+    console.error(error)
     res.status(500).json({
       status: 'error',
       message: 'Internal server error'
     })
   }
 }
-exports.createUser = (req, res) => {
+
+exports.createUser = async (req, res) => {
   const { name, surname, email, password, phone } = req.body
 
   try {
-    const users = readUsersFromFile()
+    const existingUser = await User.findOne({ email })
 
-    const existingUser = users.find((user) => user.email === email)
     if (existingUser) {
       return res
         .status(400)
         .json({ message: 'User with this email already exists' })
     }
 
-    const newUser = {
-      id: uuidv4(),
+    const newUser = new User({
       name,
       surname,
       email,
       password,
       phone
-    }
+    })
 
-    users.push(newUser)
-
-    writeUsersToFile(users)
+    await newUser.save()
 
     res.status(201).json({
       status: 'success',
       data: newUser
     })
   } catch (err) {
-    console.log(req.body)
+    console.error(err)
     res.status(500).json({ message: err.message })
   }
 }
-exports.updateUser = (req, res) => {
+
+exports.updateUser = async (req, res) => {
   const { email, password, newPassword, confirmPassword, ...updateData } =
     req.body
 
   try {
-    const users = readUsersFromFile()
+    const user = await User.findOne({ email })
 
-    const existingUserIndex = users.findIndex((user) => user.email === email)
-
-    if (existingUserIndex === -1) {
+    if (!user) {
       return res.status(404).json({
         status: 'error',
         message: 'User not found'
       })
     }
-    const existingUser = users[existingUserIndex]
-
-    Object.assign(existingUser, updateData)
-
-    if (newPassword && newPassword !== confirmPassword) {
-      return res.status(400).json({
+    if (user.password !== password) {
+      return res.status(401).json({
         status: 'error',
-        message: 'New passwords do not match'
+        message: 'Invalid password'
       })
     }
 
+    Object.assign(user, updateData)
+
     if (newPassword) {
-      existingUser.password = newPassword
+      user.password = newPassword
     }
 
-    writeUsersToFile(users)
+    await user.save()
 
     res.status(200).json({
       status: 'success',
-      data: existingUser
+      data: user
     })
   } catch (error) {
     console.error(error)
@@ -132,33 +127,26 @@ exports.updateUser = (req, res) => {
     })
   }
 }
-exports.deleteUser = (req, res) => {
-  const { email, password } =
-    req.body
+exports.deleteUser = async (req, res) => {
+  const { email, password } = req.body
 
   try {
-    const users = readUsersFromFile()
+    const user = await User.findOne({ email })
 
-    const userIndex = users.findIndex((user) => user.email === email)
-
-
-    if (userIndex === -1) {
+    if (!user) {
       return res.status(404).json({
         status: 'error',
         message: 'User not found'
       })
     }
-
-    const user = users[userIndex];
-
     if (user.password !== password) {
       return res.status(401).json({
         status: 'error',
         message: 'Invalid password'
-      });
+      })
     }
-    users.splice(userIndex, 1)
-    writeUsersToFile(users)
+
+    await user.remove()
 
     res.status(200).json({
       status: 'success',
@@ -172,7 +160,6 @@ exports.deleteUser = (req, res) => {
     })
   }
 }
-
 exports.loginUser = (req, res) => {
   const { email, password } = req.body
   const users = readUsersFromFile()
