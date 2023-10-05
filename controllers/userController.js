@@ -160,20 +160,28 @@ exports.deleteUser = async (req, res) => {
     })
   }
 }
-exports.loginUser = (req, res) => {
-  const { email, password } = req.body
-  const users = readUsersFromFile()
-  const user = users.find((u) => u.email === email)
 
-  if (!user) {
-    return res.status(401).json({ message: 'Email not found' })
+exports.loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({ message: 'Email not found' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid password' });
+    }
+
+    const token = user.generateAuthToken();
+
+    res.json({ token, id: user.id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred during login' });
   }
-
-  if (user.password !== password) {
-    return res.status(401).json({ message: 'Invalid password' })
-  }
-
-  const token = jwt.sign({ userId: user.id }, secretKey, { expiresIn: '1h' })
-
-  res.json({ token, id: user.id })
-}
+};

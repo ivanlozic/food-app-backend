@@ -39,6 +39,28 @@ const userSchema = new mongoose.Schema({
   }
 })
 
+
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    return next(error);
+  }
+});
+
+userSchema.methods.generateAuthToken = function () {
+  const token = jwt.sign({ userId: this._id }, 'YOUR_SECRET_KEY', {
+    expiresIn: '1h',
+  });
+  return token;
+};
+
+
 const User = mongoose.model('User', userSchema)
 
 module.exports = User
