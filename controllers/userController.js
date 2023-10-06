@@ -1,8 +1,7 @@
 const User = require('../models/userModel')
 const fs = require('fs')
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt')
 const { v4: uuidv4, v4 } = require('uuid')
-
 
 exports.getAllUsers = async (req, res) => {
   try {
@@ -14,6 +13,7 @@ exports.getAllUsers = async (req, res) => {
 }
 exports.getUser = async (req, res) => {
   const userId = req.params.id
+  
 
   try {
     const user = await User.findById(userId)
@@ -39,7 +39,8 @@ exports.getUser = async (req, res) => {
 }
 
 exports.createUser = async (req, res) => {
-  const { name, surname, email, password, phone } = req.body
+  const { name, surname, email, password, confirmPassword, phoneNumber } =
+    req.body
 
   try {
     const existingUser = await User.findOne({ email })
@@ -51,12 +52,13 @@ exports.createUser = async (req, res) => {
     }
 
     const newUser = new User({
-      id: uuidv4,
+      id: uuidv4(),
       name,
       surname,
       email,
       password,
-      phone
+      confirmPassword,
+      phoneNumber
     })
 
     await newUser.save()
@@ -72,7 +74,7 @@ exports.createUser = async (req, res) => {
 }
 
 exports.updateUser = async (req, res) => {
-  const { email, password, newPassword, confirmPassword, ...updateData } =
+  const {id, email, password, newPassword, confirmPassword, ...updateData } =
     req.body
 
   try {
@@ -95,6 +97,7 @@ exports.updateUser = async (req, res) => {
 
     if (newPassword) {
       user.password = newPassword
+      user.confirmPassword = confirmPassword
     }
 
     await user.save()
@@ -146,26 +149,26 @@ exports.deleteUser = async (req, res) => {
 }
 
 exports.loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email })
 
     if (!user) {
-      return res.status(401).json({ message: 'Email not found' });
+      return res.status(401).json({ message: 'Email not found' })
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await (password === user.password)
 
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid password' });
+      return res.status(401).json({ message: 'Invalid password' })
     }
 
-    const token = user.generateAuthToken();
+    const token = user.generateAuthToken()
 
-    res.json({ token, id: user.id });
+    res.json({ token, user })
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'An error occurred during login' });
+    console.error(error)
+    res.status(500).json({ message: 'An error occurred during login' })
   }
-};
+}
