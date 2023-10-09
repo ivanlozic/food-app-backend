@@ -32,21 +32,21 @@
     "description": "Grilled smoked sausages, sour cream - mustard sauce, caramelized onions, cheddar sauce",
     "price": 5.40,
     "id": 17,
-    "type": "hot dogs"
+    "type": "dogs"
   },
   {
     "title": "White Dog",
     "description": "Grilled white meat with cheese, sour cream - feta sauce, lettuce, honey mustard sauce",
     "price": 5.40,
     "id": 18,
-    "type": "hot dogs"
+    "type": "dogs"
   },
   {
     "title": "Pop Dog",
     "description": "Breaded white meat balls, sour cream - feta sauce, lettuce, homemade tomato sauce",
     "price": 5.40,
     "id": 19,
-    "type": "hot dogs"
+    "type": "dogs"
   },
   {
     "title": "Coca Cola 0.33l",
