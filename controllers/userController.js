@@ -13,7 +13,6 @@ exports.getAllUsers = async (req, res) => {
 }
 exports.getUser = async (req, res) => {
   const userId = req.params.id
-  
 
   try {
     const user = await User.findById(userId)
@@ -74,7 +73,7 @@ exports.createUser = async (req, res) => {
 }
 
 exports.updateUser = async (req, res) => {
-  const {id, email, password, newPassword, confirmPassword, ...updateData } =
+  const { id, email, password, newPassword, confirmPassword, ...updateData } =
     req.body
 
   try {
@@ -159,6 +158,7 @@ exports.loginUser = async (req, res) => {
     }
 
     const isPasswordValid = await (password === user.password)
+    console.log(isPasswordValid)
 
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid password' })
