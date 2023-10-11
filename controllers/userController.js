@@ -13,7 +13,6 @@ exports.getAllUsers = async (req, res) => {
 }
 exports.getUser = async (req, res) => {
   const userId = req.params.id
-  
 
   try {
     const user = await User.findById(userId)
@@ -39,11 +38,20 @@ exports.getUser = async (req, res) => {
 }
 
 exports.createUser = async (req, res) => {
-  const { name, surname, email, password, confirmPassword, phoneNumber } =
-    req.body
+  const {
+    Firstname,
+    Lastname,
+    Email,
+    Password,
+    ConfirmPassword,
+    MobilePhone,
+    Address,
+    City,
+    Country
+  } = req.body
 
   try {
-    const existingUser = await User.findOne({ email })
+    const existingUser = await User.findOne({ Email })
 
     if (existingUser) {
       return res
@@ -53,12 +61,15 @@ exports.createUser = async (req, res) => {
 
     const newUser = new User({
       id: uuidv4(),
-      name,
-      surname,
-      email,
-      password,
-      confirmPassword,
-      phoneNumber
+      Firstname,
+      Lastname,
+      Email,
+      Password,
+      ConfirmPassword,
+      MobilePhone,
+      Address,
+      City,
+      Country
     })
 
     await newUser.save()
@@ -74,11 +85,11 @@ exports.createUser = async (req, res) => {
 }
 
 exports.updateUser = async (req, res) => {
-  const {id, Email, Password, NewPassword, ConfirmPassword, ...updateData } =
+  const { id, email, password, newPassword, confirmPassword, ...updateData } =
     req.body
 
   try {
-    const user = await User.findOne({ Email })
+    const user = await User.findOne({ email })
 
     if (!user) {
       return res.status(404).json({
@@ -86,7 +97,7 @@ exports.updateUser = async (req, res) => {
         message: 'User not found'
       })
     }
-    if (user.Password !== Password) {
+    if (user.password !== password) {
       return res.status(401).json({
         status: 'error',
         message: 'Invalid password'
@@ -95,9 +106,9 @@ exports.updateUser = async (req, res) => {
 
     Object.assign(user, updateData)
 
-    if (NewPassword) {
-      user.Password = NewPassword
-      user.ConfirmPassword = ConfirmPassword
+    if (newPassword) {
+      user.Password = newPassword
+      user.ConfirmPassword = confirmPassword
     }
 
     await user.save()
