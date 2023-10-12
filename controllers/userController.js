@@ -38,11 +38,20 @@ exports.getUser = async (req, res) => {
 }
 
 exports.createUser = async (req, res) => {
-  const { name, surname, email, password, confirmPassword, phoneNumber } =
-    req.body
+  const {
+    Firstname,
+    Lastname,
+    Email,
+    Password,
+    ConfirmPassword,
+    MobilePhone,
+    Address,
+    City,
+    Country
+  } = req.body
 
   try {
-    const existingUser = await User.findOne({ email })
+    const existingUser = await User.findOne({ Email })
 
     if (existingUser) {
       return res
@@ -52,12 +61,15 @@ exports.createUser = async (req, res) => {
 
     const newUser = new User({
       id: uuidv4(),
-      name,
-      surname,
-      email,
-      password,
-      confirmPassword,
-      phoneNumber
+      Firstname,
+      Lastname,
+      Email,
+      Password,
+      ConfirmPassword,
+      MobilePhone,
+      Address,
+      City,
+      Country
     })
 
     await newUser.save()
@@ -95,8 +107,8 @@ exports.updateUser = async (req, res) => {
     Object.assign(user, updateData)
 
     if (newPassword) {
-      user.password = newPassword
-      user.confirmPassword = confirmPassword
+      user.Password = newPassword
+      user.ConfirmPassword = confirmPassword
     }
 
     await user.save()
@@ -125,7 +137,7 @@ exports.deleteUser = async (req, res) => {
         message: 'User not found'
       })
     }
-    if (user.password !== password) {
+    if (user.Password !== password) {
       return res.status(401).json({
         status: 'error',
         message: 'Invalid password'
@@ -157,7 +169,7 @@ exports.loginUser = async (req, res) => {
       return res.status(401).json({ message: 'Email not found' })
     }
 
-    const isPasswordValid = await (password === user.password)
+    const isPasswordValid = await (password === user.Password)
 
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid password' })

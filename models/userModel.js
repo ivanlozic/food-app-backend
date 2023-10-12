@@ -8,26 +8,26 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.Mixed,
     required: true
   },
-  name: {
+  Firstname: {
     type: String,
     required: true
   },
-  surname: {
+  Lastname: {
     type: String,
     required: true
   },
-  email: {
+  Email: {
     type: String,
     required: true,
     unique: true,
     lowercase: true
   },
-  password: {
+  Password: {
     type: String,
     required: true,
     minlength: 8
   },
-  confirmPassword: {
+  ConfirmPassword: {
     type: String,
     required: true,
     validate: {
@@ -37,19 +37,19 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords are not the same!'
     }
   },
-  phoneNumber: {
+  MobilePhone: {
     type: Number,
     required: true
   },
-  streetAddress: {
+  Address: {
     type: String, 
     required: true
   },
-  city: {
+  City: {
     type: String, 
     required: true
   },
-  country: {
+  Country: {
     type: String,
     required: true
   }
