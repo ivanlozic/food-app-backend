@@ -158,7 +158,6 @@ exports.loginUser = async (req, res) => {
     }
 
     const isPasswordValid = await (password === user.password)
-    console.log(isPasswordValid)
 
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid password' })
