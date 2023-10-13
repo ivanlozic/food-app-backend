@@ -126,10 +126,11 @@ exports.updateUser = async (req, res) => {
   }
 }
 exports.deleteUser = async (req, res) => {
-  const { email, password } = req.body
-console.log(req.body)
+
+  const userId = req.params.id
+
   try {
-    const user = await User.findOne({ email })
+    const user = await User.findById(userId)
 
     if (!user) {
       return res.status(404).json({
