@@ -127,17 +127,18 @@ exports.updateUser = async (req, res) => {
 }
 exports.deleteUser = async (req, res) => {
   const email = req.params.email
-  console.log(email)
 
   try {
     const user = await User.findOne({ email })
-    console.log(user)
+
     if (!user) {
       return res.status(404).json({
         status: 'error',
         message: 'User not found'
       })
     }
+
+   await User.deleteOne({ _id: user._id });
 
     res.status(200).json({
       status: 'success',
