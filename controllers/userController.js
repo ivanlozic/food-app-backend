@@ -126,26 +126,18 @@ exports.updateUser = async (req, res) => {
   }
 }
 exports.deleteUser = async (req, res) => {
-
-  const userId = req.params.id
+  const email = req.params.email
+  console.log(email)
 
   try {
-    const user = await User.findById(userId)
-
+    const user = await User.findOne({ email })
+    console.log(user)
     if (!user) {
       return res.status(404).json({
         status: 'error',
         message: 'User not found'
       })
     }
-    if (user.password !== password) {
-      return res.status(401).json({
-        status: 'error',
-        message: 'Invalid password'
-      })
-    }
-
-    await user.remove()
 
     res.status(200).json({
       status: 'success',
