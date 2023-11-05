@@ -1,4 +1,4 @@
-const User = require('../models/userModel')
+const User = require('../models/User')
 const fs = require('fs')
 const bcrypt = require('bcrypt')
 const { v4: uuidv4, v4 } = require('uuid')
@@ -29,7 +29,6 @@ exports.getUser = async (req, res) => {
       data: user
     })
   } catch (error) {
-    console.error(error)
     res.status(500).json({
       status: 'error',
       message: 'Internal server error'
@@ -79,7 +78,6 @@ exports.createUser = async (req, res) => {
       data: newUser
     })
   } catch (err) {
-    console.error(err)
     res.status(500).json({ message: err.message })
   }
 }
@@ -118,7 +116,6 @@ exports.updateUser = async (req, res) => {
       data: user
     })
   } catch (error) {
-    console.error(error)
     res.status(500).json({
       status: 'error',
       message: 'An error occurred while updating the user'
@@ -145,7 +142,6 @@ exports.deleteUser = async (req, res) => {
       message: 'User deleted successfully'
     })
   } catch (error) {
-    console.error(error)
     res.status(500).json({
       status: 'error',
       message: 'An error occurred while deleting the user'
@@ -173,7 +169,6 @@ exports.loginUser = async (req, res) => {
 
     res.json({ token, user })
   } catch (error) {
-    console.error(error)
     res.status(500).json({ message: 'An error occurred during login' })
   }
 }

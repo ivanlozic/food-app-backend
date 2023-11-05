@@ -17,7 +17,6 @@ const getMenu = async (req, res) => {
     const menu = await readJsonFile(menuFilePath)
     res.status(200).json(menu)
   } catch (error) {
-    console.error('Error fetching menu:', error)
     res.status(500).json({
       status: 'error',
       message: 'Failed to fetch the menu.'

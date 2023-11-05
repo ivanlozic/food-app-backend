@@ -1,4 +1,4 @@
-const Order = require('../models/orderModel')
+const Order = require('../models/Order')
 
 const createOrder = async (req, res) => {
   try {
@@ -11,8 +11,6 @@ const createOrder = async (req, res) => {
     if (highestOrderId && !isNaN(highestOrderId.reservationId)) {
       newReservationId = highestOrderId.reservationId + 1
     }
-
-    console.log(newReservationId)
 
     const newOrder = new Order({
       reservationId: newReservationId,
@@ -32,7 +30,6 @@ const createOrder = async (req, res) => {
       status: 'error',
       message: 'Failed to create the order.'
     })
-    console.log(error)
   }
 }
 
