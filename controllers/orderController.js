@@ -42,13 +42,21 @@ const getOrders = async (req, res) => {
   try {
     const orders = await Order.find({ UserId: userId })
 
-
-    res.status(200).json({
-      status: 'success',
-      data: {
-        orders: orders
-      }
-    })
+    if (orders.length === 0) {
+      res.status(200).json({
+        status: 'success',
+        data: {
+          orders: []
+        }
+      })
+    } else {
+      res.status(200).json({
+        status: 'success',
+        data: {
+          orders: orders
+        }
+      })
+    }
   } catch (error) {
     res.status(500).json({
       status: 'error',
