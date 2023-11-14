@@ -1,5 +1,33 @@
 const UserReview = require('../models/UserReview')
 
+const getAllReviews = async (req, res) => {
+  try {
+    const allReviews = await UserReview.find();
+
+    if (allReviews.length === 0) {
+      res.status(200).json({
+        status: 'success',
+        data: {
+          reviews: [],
+        },
+      });
+    } else {
+      res.status(200).json({
+        status: 'success',
+        data: {
+          reviews: allReviews,
+        },
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to retrieve all reviews.',
+    });
+  }
+};
+
+
 const createUserReview = async (req, res) => {
   try {
     const { Name, UserId, ProfilePicture, Content, Stars } = req.body
@@ -77,6 +105,7 @@ const deleteUserReview = async (req, res) => {
 }
 
 module.exports = {
+  getAllReviews,
   createUserReview,
   getUserReviews,
   deleteUserReview
