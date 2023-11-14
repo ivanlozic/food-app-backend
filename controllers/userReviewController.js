@@ -2,41 +2,39 @@ const UserReview = require('../models/UserReview')
 
 const getAllReviews = async (req, res) => {
   try {
-    const allReviews = await UserReview.find();
+    const allReviews = await UserReview.find()
 
     if (allReviews.length === 0) {
       res.status(200).json({
         status: 'success',
         data: {
-          reviews: [],
-        },
-      });
+          reviews: []
+        }
+      })
     } else {
       res.status(200).json({
         status: 'success',
         data: {
-          reviews: allReviews,
-        },
-      });
+          reviews: allReviews
+        }
+      })
     }
   } catch (error) {
     res.status(500).json({
       status: 'error',
-      message: 'Failed to retrieve all reviews.',
-    });
+      message: 'Failed to retrieve all reviews.'
+    })
   }
-};
-
+}
 
 const createUserReview = async (req, res) => {
   try {
-    const { Name, UserId, ProfilePicture, Content, Stars } = req.body
+    const { Author, UserId, Content, Stars } = req.body
     const newUserReview = new UserReview({
-      Name,
-      UserId,
-      ProfilePicture,
+      Author,
       Content,
-      Stars
+      Stars,
+      UserId
     })
     const savedUserReview = await newUserReview.save()
 

@@ -6,6 +6,7 @@ const port = process.env.PORT || 5000
 const menuRoutes = require('./routes/menuRoutes')
 const orderRoutes = require('./routes/orderRoutes')
 const userRoutes = require('./routes/userRoutes')
+const userReviewRoutes = require('./routes/userReviewRoutes')
 
 app.use(express.json())
 app.use(cors())
@@ -22,6 +23,7 @@ app.use(function (req, res, next) {
 app.use('/', menuRoutes)
 app.use('/', orderRoutes)
 app.use('/', userRoutes)
+app.use('/', userReviewRoutes)
 
 app.listen(port, () => {
   console.log('Server is listening')

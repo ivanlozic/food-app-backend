@@ -9,6 +9,6 @@ const userReviewSchema = new mongoose.Schema({
   UserId: mongoose.Schema.Types.Mixed
 })
 
-const UserReview = mongoose.model('UserReview', userReviewSchema)
+const UserReview = mongoose.model('review', userReviewSchema)
 
 module.exports = UserReview
